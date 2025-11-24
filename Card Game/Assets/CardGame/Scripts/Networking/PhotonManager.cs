@@ -41,11 +41,11 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         Debug.Log($"Joined room {PhotonNetwork.CurrentRoom.Name}: {PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}");
+        SceneLoader.Instance.LoadScene(GameConstants.GAME_SCENE);
 
         if (PhotonNetwork.IsMasterClient &&
             PhotonNetwork.CurrentRoom.PlayerCount == maxPlayers)
         {
-            //TODO: Load new scene
         }
     }
 
