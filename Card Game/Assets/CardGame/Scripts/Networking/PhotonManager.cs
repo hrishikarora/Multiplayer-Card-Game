@@ -9,12 +9,21 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] string roomName = "CardGame";
 
-    void Awake()
+
+    public override void OnEnable()
     {
+        base.OnEnable();
+        EventManager.AddListener<EventData.CreateJoinRoom>(JoinOrCreateRoom);
         PhotonNetwork.AutomaticallySyncScene = true;
     }
 
-    void Start()
+
+    public override void OnDisable()
+    {
+        base.OnDisable();
+        EventManager.RemoveListener<EventData.CreateJoinRoom>(JoinOrCreateRoom);
+    }
+    private void Start()
     {
         Connect();
     }
@@ -31,27 +40,38 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("Connected to Master");
 
+        EventManager.Trigger(new EventData.ConnectedToMaster());
+    }
+
+    public void JoinOrCreateRoom(EventData.CreateJoinRoom createJoinRoom)
+    {
         PhotonNetwork.JoinOrCreateRoom(
-            roomName,
-            new RoomOptions { MaxPlayers = maxPlayers },
-            TypedLobby.Default
-        );
+              roomName,
+              new RoomOptions { MaxPlayers = maxPlayers },
+              TypedLobby.Default
+          );
     }
 
     public override void OnJoinedRoom()
     {
-        Debug.Log($"Joined room {PhotonNetwork.CurrentRoom.Name}: {PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}");
-        SceneLoader.Instance.LoadScene(GameConstants.GAME_SCENE);
+        Debug.Log($"Joined room: {PhotonNetwork.CurrentRoom.PlayerCount}/2");
 
-        if (PhotonNetwork.IsMasterClient &&
-            PhotonNetwork.CurrentRoom.PlayerCount == maxPlayers)
-        {
-        }
+        
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
         Debug.LogError($"Join room failed: {returnCode} - {message}");
+        EventData.OnJoinedRoom joinRoom = new EventData.OnJoinedRoom();
+        EventManager.Trigger<EventData.OnJoinedRoom>( joinRoom );
+    }
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        if (PhotonNetwork.CurrentRoom.PlayerCount == maxPlayers && PhotonNetwork.IsMasterClient)
+        {
+            SceneLoader.Instance.LoadScene(GameConstants.GAME_SCENE);
+        }
     }
 
     public override void OnDisconnected(DisconnectCause cause)
