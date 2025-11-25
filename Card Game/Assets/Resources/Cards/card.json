@@ -1,16 +1,100 @@
 {
   "cards": [
-    {"id":1,"name":"Anchor","cost":1,"power":2,"ability":{"type":"GainPoints","value":1}},
-    {"id":2,"name":"Spin","cost":2,"power":3,"ability":{"type":"GainPoints","value":2}},
-    {"id":3,"name":"Ope","cost":1,"power":1,"ability":{"type":"StealPoints","value":2}},
-    {"id":4,"name":"Strike","cost":2,"power":3,"ability":{"type":"GainPoints","value":1}},
-    {"id":5,"name":"Power","cost":3,"power":4,"ability":{"type":"GainPoints","value":3}},
-    {"id":6,"name":"Wicket Keeper","cost":1,"power":1,"ability":{"type":"StealPoints","value":3}},
-    {"id":7,"name":"All-Rounder","cost":3,"power":5,"ability":{"type":"GainPoints","value":2}},
-    {"id":8,"name":"Finisher","cost":2,"power":2,"ability":{"type":"StealPoints","value":4}},
-    {"id":9,"name":"Fast","cost":4,"power":7,"ability":{"type":"GainPoints","value":4}},
-    {"id":10,"name":"Sixer","cost":5,"power":10,"ability":{"type":"GainPoints","value":6}},
-    {"id":11,"name":"Captain","cost":4,"power":7,"ability":{"type":"GainPoints","value":5}},
-    {"id":12,"name":"Yorker","cost":3,"power":5,"ability":{"type":"StealPoints","value":5}}
+    {
+      "id": 1,
+      "name": "Anchor",
+      "cost": 1,
+      "power": 2,
+      "ability": {"type": "GainPoints", "value": 1},
+      "bgColor": {"r": 0.85, "g": 0.15, "b": 0.25, "a": 1}
+    },
+    {
+      "id": 2,
+      "name": "Spin",
+      "cost": 2,
+      "power": 3,
+      "ability": {"type": "GainPoints", "value": 2},
+      "bgColor": {"r": 0.95, "g": 0.55, "b": 0.10, "a": 1}
+    },
+    {
+      "id": 3,
+      "name": "Ope",
+      "cost": 1,
+      "power": 1,
+      "ability": {"type": "StealPoints", "value": 2},
+      "bgColor": {"r": 0.98, "g": 0.80, "b": 0.20, "a": 1}
+    },
+    {
+      "id": 4,
+      "name": "Strike",
+      "cost": 2,
+      "power": 3,
+      "ability": {"type": "GainPoints", "value": 1},
+      "bgColor": {"r": 0.15, "g": 0.70, "b": 0.30, "a": 1}
+    },
+    {
+      "id": 5,
+      "name": "Power",
+      "cost": 3,
+      "power": 4,
+      "ability": {"type": "GainPoints", "value": 3},
+      "bgColor": {"r": 0.10, "g": 0.60, "b": 0.75, "a": 1}
+    },
+    {
+      "id": 6,
+      "name": "Wicket Keeper",
+      "cost": 1,
+      "power": 1,
+      "ability": {"type": "StealPoints", "value": 3},
+      "bgColor": {"r": 0.20, "g": 0.40, "b": 0.85, "a": 1}
+    },
+    {
+      "id": 7,
+      "name": "All-Rounder",
+      "cost": 3,
+      "power": 5,
+      "ability": {"type": "GainPoints", "value": 2},
+      "bgColor": {"r": 0.45, "g": 0.25, "b": 0.80, "a": 1}
+    },
+    {
+      "id": 8,
+      "name": "Finisher",
+      "cost": 2,
+      "power": 2,
+      "ability": {"type": "StealPoints", "value": 4},
+      "bgColor": {"r": 0.70, "g": 0.25, "b": 0.55, "a": 1}
+    },
+    {
+      "id": 9,
+      "name": "Fast",
+      "cost": 4,
+      "power": 7,
+      "ability": {"type": "GainPoints", "value": 4},
+      "bgColor": {"r": 0.10, "g": 0.10, "b": 0.10, "a": 1}
+    },
+    {
+      "id": 10,
+      "name": "Sixer",
+      "cost": 5,
+      "power": 10,
+      "ability": {"type": "GainPoints", "value": 6},
+      "bgColor": {"r": 0.45, "g": 0.45, "b": 0.45, "a": 1}
+    },
+    {
+      "id": 11,
+      "name": "Captain",
+      "cost": 4,
+      "power": 7,
+      "ability": {"type": "GainPoints", "value": 5},
+      "bgColor": {"r": 0.20, "g": 0.20, "b": 0.20, "a": 1}
+    },
+    {
+      "id": 12,
+      "name": "Yorker",
+      "cost": 3,
+      "power": 5,
+      "ability": {"type": "StealPoints", "value": 5},
+      "bgColor": {"r": 0.70, "g": 0.65, "b": 0.25, "a": 1}
+    }
   ]
 }
