@@ -1,6 +1,6 @@
 using System;
 
-public static class EventData
+public static class EventActionData
 {
  
     public class CreateJoinRoom : GameEvent { }

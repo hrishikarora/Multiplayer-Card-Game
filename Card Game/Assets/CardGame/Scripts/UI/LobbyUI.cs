@@ -3,7 +3,7 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static EventData;
+using static EventActionData;
 
 public class LobbyUI : MonoBehaviour
 {
@@ -13,13 +13,13 @@ public class LobbyUI : MonoBehaviour
 
     private void OnEnable()
     {
-        EventManager.AddListener<EventData.OnJoinedRoom>(OnJoinedRoom);
-        EventManager.AddListener<EventData.ConnectedToMaster>(OnConnectedToMaster);
+        EventManager.AddListener<EventActionData.OnJoinedRoom>(OnJoinedRoom);
+        EventManager.AddListener<EventActionData.ConnectedToMaster>(OnConnectedToMaster);
         statusText.text = "Connecting to server...";
-        EventData.CreateJoinRoom createJoinRoom = new EventData.CreateJoinRoom();
+        EventActionData.CreateJoinRoom createJoinRoom = new EventActionData.CreateJoinRoom();
         quickMatchButton.onClick.AddListener(() =>
         {
-            EventManager.Trigger<EventData.CreateJoinRoom>(createJoinRoom);
+            EventManager.Trigger<EventActionData.CreateJoinRoom>(createJoinRoom);
             waitingPanel.SetActive(true);
         });
         quickMatchButton.interactable = false;
@@ -28,8 +28,8 @@ public class LobbyUI : MonoBehaviour
 
     private void OnDisable()
     {
-        EventManager.RemoveListener<EventData.OnJoinedRoom>(OnJoinedRoom);
-        EventManager.RemoveListener<EventData.ConnectedToMaster>(OnConnectedToMaster);
+        EventManager.RemoveListener<EventActionData.OnJoinedRoom>(OnJoinedRoom);
+        EventManager.RemoveListener<EventActionData.ConnectedToMaster>(OnConnectedToMaster);
 
         quickMatchButton.onClick.RemoveAllListeners();
     }
@@ -42,7 +42,7 @@ public class LobbyUI : MonoBehaviour
 
     }
 
-    private void OnJoinedRoom(EventData.OnJoinedRoom onJoinedRoom)
+    private void OnJoinedRoom(EventActionData.OnJoinedRoom onJoinedRoom)
     {
         statusText.text = "Waiting for opponent...";
         quickMatchButton.interactable = false;

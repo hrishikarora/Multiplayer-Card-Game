@@ -13,7 +13,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public override void OnEnable()
     {
         base.OnEnable();
-        EventManager.AddListener<EventData.CreateJoinRoom>(JoinOrCreateRoom);
+        EventManager.AddListener<EventActionData.CreateJoinRoom>(JoinOrCreateRoom);
         PhotonNetwork.AutomaticallySyncScene = true;
     }
 
@@ -21,7 +21,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public override void OnDisable()
     {
         base.OnDisable();
-        EventManager.RemoveListener<EventData.CreateJoinRoom>(JoinOrCreateRoom);
+        EventManager.RemoveListener<EventActionData.CreateJoinRoom>(JoinOrCreateRoom);
     }
     private void Start()
     {
@@ -40,10 +40,10 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("Connected to Master");
 
-        EventManager.Trigger(new EventData.ConnectedToMaster());
+        EventManager.Trigger(new EventActionData.ConnectedToMaster());
     }
 
-    public void JoinOrCreateRoom(EventData.CreateJoinRoom createJoinRoom)
+    public void JoinOrCreateRoom(EventActionData.CreateJoinRoom createJoinRoom)
     {
         PhotonNetwork.JoinOrCreateRoom(
               roomName,
@@ -55,15 +55,13 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         Debug.Log($"Joined room: {PhotonNetwork.CurrentRoom.PlayerCount}/2");
-
-        
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
         Debug.LogError($"Join room failed: {returnCode} - {message}");
-        EventData.OnJoinedRoom joinRoom = new EventData.OnJoinedRoom();
-        EventManager.Trigger<EventData.OnJoinedRoom>( joinRoom );
+        EventActionData.OnJoinedRoom joinRoom = new EventActionData.OnJoinedRoom();
+        EventManager.Trigger<EventActionData.OnJoinedRoom>( joinRoom );
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
