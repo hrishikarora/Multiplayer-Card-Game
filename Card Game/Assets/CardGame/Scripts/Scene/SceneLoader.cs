@@ -19,4 +19,4 @@ public class SceneLoader : BaseSingleton<SceneLoader>
             SceneManager.LoadScene(sceneName);
         }
     }
-}
+}   

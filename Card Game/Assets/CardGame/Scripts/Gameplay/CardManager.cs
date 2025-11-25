@@ -6,6 +6,7 @@ public class CardManager : BaseSingleton<CardManager>
     private readonly List<CardData> _deck = new();
     private List<CardData> _allCards = new();
 
+    public List<CardData> AllCards => _allCards;
     protected override void Awake()
     {
         base.Awake();
@@ -44,6 +45,7 @@ public class CardManager : BaseSingleton<CardManager>
 
         var card = _deck[0];
         _deck.RemoveAt(0);
+        UIManager.Instance.UpdateDeckCardUI(_deck.Count);
         return card;
     }
 
@@ -56,4 +58,5 @@ public class CardManager : BaseSingleton<CardManager>
         }
         return hand;
     }
+
 }

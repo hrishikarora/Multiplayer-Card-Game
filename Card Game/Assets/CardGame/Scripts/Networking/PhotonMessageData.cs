@@ -31,3 +31,16 @@ public class GameStartMessage
     public string[] playerIds;
     public int totalTurns;
 }
+
+[System.Serializable]
+public class EndTurnMessage
+{
+    public string action;
+    public string playerId;
+}
+[System.Serializable]
+public class RequestCardMessage
+{
+    public string action;
+    public string playerId;
+}

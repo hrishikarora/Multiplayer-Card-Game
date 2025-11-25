@@ -17,6 +17,12 @@ public static class GameConstants
     public const byte GAME_EVENT_CODE = 2;
     public const string GAME_START_ACTION_NAME = "gameStart";
     public const string TURN_START_ACTION_NAME = "turnStart";
+    public const string END_TURN_ACTION_NAME = "endTurn";
+    public const string REQ_CARD_ACTION_NAME = "requestCard";
+    public const string REVEAL_CARDS_ACTION_NAME = "revealCards";
+    public const string END_GAME_ACTION_NAME = "endGame";
+
+
     #endregion
 
 }

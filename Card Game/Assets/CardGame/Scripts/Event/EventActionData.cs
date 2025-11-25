@@ -36,4 +36,9 @@ public static class EventActionData
         public int p1Score;
         public int p2Score;
     }
+
+    public class SendRevealCards : GameEvent
+    {
+        public string PlayerId;
+    }
 }

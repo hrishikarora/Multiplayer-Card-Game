@@ -38,7 +38,7 @@ public class PhotonEventListener : MonoBehaviour, IOnEventCallback
         switch (wrapper.action)
         {
             case GameConstants.GAME_START_ACTION_NAME:
-                var gameStart = JsonUtility.FromJson<GameStartJson>(json);
+                var gameStart = JsonUtility.FromJson<GameStartMessage>(json);
                 EventManager.Trigger(new EventActionData.GameStart
                 {
                     playerIds = gameStart.playerIds,
@@ -47,6 +47,46 @@ public class PhotonEventListener : MonoBehaviour, IOnEventCallback
                 Debug.Log("Game start raised");
                 break;
 
+            case GameConstants.TURN_START_ACTION_NAME:
+                var turnStart = JsonUtility.FromJson<TurnStartMessage>(json);
+                EventManager.Trigger(new EventActionData.TurnStart
+                {
+                    turnNumber = turnStart.turnNumber,
+                    availableCost = turnStart.availableCost
+                });
+                break;
+            case GameConstants.END_TURN_ACTION_NAME:
+                var endTurn = JsonUtility.FromJson<EndTurnMessage>(json);
+                EventManager.Trigger(new EventActionData.PlayerEndedTurn
+                {
+                    playerId = endTurn.playerId
+                });
+                break;
+            case GameConstants.REVEAL_CARDS_ACTION_NAME:
+                var reveal = JsonUtility.FromJson<RevealCardsMessage>(json);
+                EventManager.Trigger(new EventActionData.RevealCards
+                {
+                    cardIds = reveal.cardIds,
+                    playerId = reveal.playerId
+                });
+                break;
+            case GameConstants.REQ_CARD_ACTION_NAME:
+                var req = JsonUtility.FromJson<RequestCardMessage>(json);
+                EventManager.Trigger(new EventActionData.SendRevealCards()
+                {
+                    PlayerId = GameManager.Instance.CurrentPlayerID
+                });
+                break;
+            case GameConstants.END_GAME_ACTION_NAME:
+                var endGame = JsonUtility.FromJson<GameEndMessage>(json);
+                UIManager.Instance.OpenEndGameScreen();
+                EventManager.Trigger(new EventActionData.GameEnd()
+                {
+                    winner = endGame.winner,
+                    p1Score = endGame.p1Score,
+                    p2Score = endGame.p2Score
+                });
+                break;
             default:
                 Debug.LogWarning($"[PhotonEventListener] Unknown action: {wrapper.action}");
                 break;
@@ -59,9 +99,4 @@ public class PhotonEventListener : MonoBehaviour, IOnEventCallback
         public string action;
     }
 
-    [System.Serializable] private class GameStartJson { public string action; public string[] playerIds; public int totalTurns; }
-    [System.Serializable] private class TurnStartJson { public string action; public int turnNumber; public int availableCost; }
-    [System.Serializable] private class EndTurnJson { public string action; public string playerId; }
-    [System.Serializable] private class RevealCardsJson { public string action; public int[] cardIds; public string playerId; }
-    [System.Serializable] private class GameEndJson { public string action; public string winner; public int p1Score; public int p2Score; }
 }

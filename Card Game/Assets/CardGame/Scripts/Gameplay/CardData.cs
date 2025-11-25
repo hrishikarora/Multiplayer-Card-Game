@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [Serializable]
-public class Ability
+public class AbilityData
 {
     public string type;
     public int value;
@@ -15,7 +15,7 @@ public class CardData
     public string name;
     public int cost;
     public int power;
-    public Ability ability;
+    public AbilityData ability;
     public Color bgColor;
 }
 

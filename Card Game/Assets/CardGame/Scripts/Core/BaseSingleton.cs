@@ -32,6 +32,5 @@ public abstract class BaseSingleton<T> : MonoBehaviour where T : BaseSingleton<T
         }
 
         _instance = (T)this;
-        DontDestroyOnLoad(gameObject);
     }
 }
