@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 [Serializable]
 public class Ability
@@ -15,6 +16,7 @@ public class CardData
     public int cost;
     public int power;
     public Ability ability;
+    public Color bgColor;
 }
 
 [Serializable]
