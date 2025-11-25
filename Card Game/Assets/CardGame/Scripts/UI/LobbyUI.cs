@@ -7,22 +7,22 @@ using static EventActionData;
 
 public class LobbyUI : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI statusText;
-    [SerializeField] private Button quickMatchButton;
-    [SerializeField] private GameObject waitingPanel;
+    [SerializeField] private TextMeshProUGUI _statusText;
+    [SerializeField] private Button _quickMatchButton;
+    [SerializeField] private GameObject _waitingPanel;
 
     private void OnEnable()
     {
         EventManager.AddListener<EventActionData.OnJoinedRoom>(OnJoinedRoom);
         EventManager.AddListener<EventActionData.ConnectedToMaster>(OnConnectedToMaster);
-        statusText.text = "Connecting to server...";
+        _statusText.text = "Connecting to server...";
         EventActionData.CreateJoinRoom createJoinRoom = new EventActionData.CreateJoinRoom();
-        quickMatchButton.onClick.AddListener(() =>
+        _quickMatchButton.onClick.AddListener(() =>
         {
             EventManager.Trigger<EventActionData.CreateJoinRoom>(createJoinRoom);
-            waitingPanel.SetActive(true);
+            _waitingPanel.SetActive(true);
         });
-        quickMatchButton.interactable = false;
+        _quickMatchButton.interactable = false;
 
     }
 
@@ -31,24 +31,24 @@ public class LobbyUI : MonoBehaviour
         EventManager.RemoveListener<EventActionData.OnJoinedRoom>(OnJoinedRoom);
         EventManager.RemoveListener<EventActionData.ConnectedToMaster>(OnConnectedToMaster);
 
-        quickMatchButton.onClick.RemoveAllListeners();
+        _quickMatchButton.onClick.RemoveAllListeners();
     }
 
     private void OnConnectedToMaster(ConnectedToMaster master)
     {
-        statusText.text = "Connected";
+        _statusText.text = "Connected";
 
-        quickMatchButton.interactable = true;
+        _quickMatchButton.interactable = true;
 
     }
 
     private void OnJoinedRoom(EventActionData.OnJoinedRoom onJoinedRoom)
     {
-        statusText.text = "Waiting for opponent...";
-        quickMatchButton.interactable = false;
+        _statusText.text = "Waiting for opponent...";
+        _quickMatchButton.interactable = false;
 
-        if (waitingPanel != null)
-            waitingPanel.SetActive(true);
+        if (_waitingPanel != null)
+            _waitingPanel.SetActive(true);
     }
 
   

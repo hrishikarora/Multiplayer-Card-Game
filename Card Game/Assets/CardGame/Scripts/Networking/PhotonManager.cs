@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class PhotonManager : MonoBehaviourPunCallbacks
 {
-    [SerializeField] string roomName = "CardGame";
+    [SerializeField] string _roomName = "CardGame";
 
 
     public override void OnEnable()
@@ -46,7 +46,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public void JoinOrCreateRoom(EventActionData.CreateJoinRoom createJoinRoom)
     {
         PhotonNetwork.JoinOrCreateRoom(
-              roomName,
+              _roomName,
               new RoomOptions { MaxPlayers = maxPlayers },
               TypedLobby.Default
           );

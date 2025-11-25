@@ -1,0 +1,16 @@
+{
+  "cards": [
+    {"id":1,"name":"Anchor","cost":1,"power":2,"ability":{"type":"GainPoints","value":1}},
+    {"id":2,"name":"Spin","cost":2,"power":3,"ability":{"type":"GainPoints","value":2}},
+    {"id":3,"name":"Ope","cost":1,"power":1,"ability":{"type":"StealPoints","value":2}},
+    {"id":4,"name":"Strike","cost":2,"power":3,"ability":{"type":"GainPoints","value":1}},
+    {"id":5,"name":"Power","cost":3,"power":4,"ability":{"type":"GainPoints","value":3}},
+    {"id":6,"name":"Wicket Keeper","cost":1,"power":1,"ability":{"type":"StealPoints","value":3}},
+    {"id":7,"name":"All-Rounder","cost":3,"power":5,"ability":{"type":"GainPoints","value":2}},
+    {"id":8,"name":"Finisher","cost":2,"power":2,"ability":{"type":"StealPoints","value":4}},
+    {"id":9,"name":"Fast","cost":4,"power":7,"ability":{"type":"GainPoints","value":4}},
+    {"id":10,"name":"Sixer","cost":5,"power":10,"ability":{"type":"GainPoints","value":6}},
+    {"id":11,"name":"Captain","cost":4,"power":7,"ability":{"type":"GainPoints","value":5}},
+    {"id":12,"name":"Yorker","cost":3,"power":5,"ability":{"type":"StealPoints","value":5}}
+  ]
+}

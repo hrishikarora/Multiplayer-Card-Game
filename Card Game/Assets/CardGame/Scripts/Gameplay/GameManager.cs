@@ -32,11 +32,4 @@ public class GameManager : MonoBehaviour
         Debug.Log("[GameManager] GameStart raised.");
     }
 
-    [System.Serializable]
-    private class GameStartMessage
-    {
-        public string action;
-        public string[] playerIds;
-        public int totalTurns;
-    }
 }
