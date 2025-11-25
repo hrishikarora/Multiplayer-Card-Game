@@ -841,9 +841,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92dce3bedb8d2ca4ca1627589a0f4514, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LobbyUI
-  statusText: {fileID: 764521777}
-  quickMatchButton: {fileID: 57233450}
-  waitingPanel: {fileID: 137387887}
+  _statusText: {fileID: 764521777}
+  _quickMatchButton: {fileID: 57233450}
+  _waitingPanel: {fileID: 137387887}
 --- !u!1001 &1674079491
 PrefabInstance:
   m_ObjectHideFlags: 0
