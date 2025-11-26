@@ -17,8 +17,8 @@
 - Players are assigned IDs P1 and P2 using room custom properties.
 - Game state changes (game start, turn start, end turn, reveal cards, end game) are sent as JSON messages with an `action` field.
 # Reconnection
--The game supports automatic reconnection while the app is still running and the room is alive, but if a player fully closes the app they cannot currently rejoin the same match; this could be extended in the future by rejoining the room and restoring state from a saved GameSnapshot.
--The game automatically consider forfeit if user is unable to join in the a certain window and other player wins
+- The game supports automatic reconnection while the app is still running and the room is alive. However, if a player fully closes the app, they currently cannot rejoin the same match; this could be extended in the future by rejoining the room and restoring the state from a saved GameSnapshot.
+- The game automatically considers it a forfeit if a user is unable to rejoin within a certain time window, and the other player wins.
 
 # Cards and JSON
 - Card data is a JSON file under:
