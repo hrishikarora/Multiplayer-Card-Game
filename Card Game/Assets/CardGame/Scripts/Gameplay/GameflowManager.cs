@@ -17,7 +17,7 @@ public class GameflowManager : BaseSingleton<GameflowManager>
     public int CurrentTurn=>_currentTurn;
 
     private Coroutine disconnectTimerRoutine;
-    private const int DisconnectTimeout = 15;
+    private const int DisconnectTimeout = 60;
 
     public bool IsGameEnd = false;
     private void OnEnable()

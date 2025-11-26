@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class GameManager : BaseSingleton<GameManager>
 {
-    public string CurrentPlayerID => PhotonNetwork.IsMasterClient ? GameConstants.P1 : GameConstants.P2;
+    public string CurrentPlayerID => PhotonNetwork.NickName;
     private readonly Dictionary<string, int> playerScore = new Dictionary<string, int>();
 
     private GameSnapshot _gameSnapshot = new GameSnapshot();
