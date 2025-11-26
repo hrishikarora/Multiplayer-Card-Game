@@ -178,18 +178,21 @@ public class GameflowManager : BaseSingleton<GameflowManager>
         }
     }
 
-
-    private void OnPlayerReconnected(OnPlayerReconnected onPlayerReconnected)
+    private void OnPlayerReconnected(EventActionData.OnPlayerReconnected e)
     {
-        if (disconnectTimerRoutine != null)
-        {
-            StopCoroutine(disconnectTimerRoutine);
-            disconnectTimerRoutine = null;
-        }
-        _currentTurn--;
         TurnManager.Instance.PauseGame(false);
-        NextTurn();
+        if (PhotonNetwork.IsMasterClient)
+        {
+            if (disconnectTimerRoutine != null)
+            {
+                StopCoroutine(disconnectTimerRoutine);
+                disconnectTimerRoutine = null;
+            }
+            _playersEnded = 0;
+            StartTurn(_currentTurn);
+        }
     }
+  
 
     private IEnumerator DisconnectTimeoutRoutine()
     {

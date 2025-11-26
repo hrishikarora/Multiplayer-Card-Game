@@ -1,4 +1,4 @@
-using Photon.Pun;
+﻿using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
 using UnityEngine;
@@ -9,16 +9,22 @@ public class ReconnectionHandler : MonoBehaviourPunCallbacks
     private int currentAttempt = 0;
     private bool isReconnecting = false;
     private bool isConnected = true;
+    private bool wasConnectedBefore = true;
+
     public override void OnDisconnected(DisconnectCause cause)
     {
         if (GameflowManager.Instance.IsGameEnd) return;
+
         Debug.LogWarning($"Disconnected: {cause}");
-        isConnected = false;
+
+        wasConnectedBefore = false;
+
         if (!isReconnecting)
             StartCoroutine(AutoReconnect());
-        EventManager.Trigger<EventActionData.OnPlayerDisconnected>(new EventActionData.OnPlayerDisconnected());
 
+        EventManager.Trigger<EventActionData.OnPlayerDisconnected>(new EventActionData.OnPlayerDisconnected());
     }
+
 
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
@@ -26,60 +32,60 @@ public class ReconnectionHandler : MonoBehaviourPunCallbacks
         if (GameflowManager.Instance.IsGameEnd) return;
 
         base.OnPlayerLeftRoom(otherPlayer);
+
         EventManager.Trigger<EventActionData.OnPlayerDisconnected>(new EventActionData.OnPlayerDisconnected());
     }
 
     private IEnumerator AutoReconnect()
     {
         isReconnecting = true;
+        currentAttempt = 0;
 
-        while (!PhotonNetwork.IsConnected && currentAttempt < reconnectAttempts)
+        while (!PhotonNetwork.IsConnectedAndReady && currentAttempt < reconnectAttempts)
         {
-            Debug.LogWarning($"Reconnect attempt {currentAttempt + 1}/{reconnectAttempts}");
             currentAttempt++;
+            Debug.LogWarning($"Reconnect attempt {currentAttempt}/{reconnectAttempts}");
+
             PhotonNetwork.ConnectUsingSettings();
+
             yield return new WaitForSeconds(3f);
         }
 
         isReconnecting = false;
-        currentAttempt = 0;
 
-        if (!PhotonNetwork.IsConnected && !isConnected)
+        if (!PhotonNetwork.IsConnectedAndReady)
         {
-            Debug.LogWarning("Failed to reconnect. Sending player to Lobby.");
+            Debug.LogWarning("Failed to reconnect → Sending to lobby.");
             SceneLoader.Instance.LoadScene(GameConstants.LOBBY_SCENE);
         }
     }
 
     public override void OnConnectedToMaster()
     {
-        if (isConnected) return;
-        isConnected = true;
+        if (wasConnectedBefore) return;
 
-        Debug.Log("Reconnected to Master successfully!");   
+        Debug.Log("Reconnected to Master successfully!");
 
-        if (isReconnecting)
+        wasConnectedBefore = true;
+
+        if (!string.IsNullOrEmpty(GameManager.Instance.RoomName))
         {
-            if (!string.IsNullOrEmpty(GameManager.Instance.RoomName))
-            {
-                PhotonNetwork.RejoinRoom(GameManager.Instance.RoomName);
-            }
-            else
-            {
-                SceneLoader.Instance.LoadScene(GameConstants.LOBBY_SCENE);
-            }
-
-            isReconnecting = false;
+            PhotonNetwork.RejoinRoom(GameManager.Instance.RoomName);
+        }
+        else
+        {
+            SceneLoader.Instance.LoadScene(GameConstants.LOBBY_SCENE);
         }
     }
+
     public override void OnPlayerEnteredRoom(Player player)
     {
-        Debug.Log("Room rejoineed");
-        EventManager.Trigger<EventActionData.OnPlayerReconnected>(new EventActionData.OnPlayerReconnected());
+            Debug.Log("Expected player rejoined");
+            EventManager.Trigger(new EventActionData.OnPlayerReconnected());
     }
-
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
+        Debug.Log("[Rejoin]: " + message);
         SceneLoader.Instance.LoadScene(GameConstants.LOBBY_SCENE);
     }
 

@@ -27,7 +27,6 @@ public class GameManager : BaseSingleton<GameManager>
     private void OnDisable()
     {
         EventManager.RemoveListener<EventActionData.RevealCards>(OnCardsReveal);
-        EventManager.ClearAll();
     }
 
     private void Start()

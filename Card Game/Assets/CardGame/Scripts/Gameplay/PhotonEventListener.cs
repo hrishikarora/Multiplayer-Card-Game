@@ -78,6 +78,7 @@ public class PhotonEventListener : MonoBehaviour, IOnEventCallback
                 });
                 break;
             case GameConstants.END_GAME_ACTION_NAME:
+                GameflowManager.Instance.IsGameEnd = true;
                 var endGame = JsonUtility.FromJson<GameEndMessage>(json);
                 UIManager.Instance.OpenEndGameScreen();
                 EventManager.Trigger(new EventActionData.GameEnd()

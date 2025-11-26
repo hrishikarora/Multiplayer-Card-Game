@@ -33,13 +33,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsConnected)
             return;
 
-            if (!PlayerPrefs.HasKey("PLAYER_ID"))
-            {
-                PlayerPrefs.SetString("PLAYER_ID", System.Guid.NewGuid().ToString());
-            }
 
-            PhotonNetwork.AuthValues = new AuthenticationValues(PlayerPrefs.GetString("PLAYER_ID"));
-            PhotonNetwork.ConnectUsingSettings();
+        PhotonNetwork.ConnectUsingSettings();
     }
 
     public override void OnConnectedToMaster()

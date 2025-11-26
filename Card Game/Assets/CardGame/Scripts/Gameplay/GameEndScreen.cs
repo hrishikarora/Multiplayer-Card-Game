@@ -14,7 +14,7 @@ public class GameEndScreen : MonoBehaviour
     private void OnEnable()
     {
         PhotonNetwork.Disconnect();
-
+        TurnManager.ResetPlayedCards();
         _closeBtn.onClick.AddListener(OnClose);
         EventManager.AddListener<EventActionData.GameEnd>(UpdateEndGameScreen);
     }

@@ -79,7 +79,7 @@ public class TurnManager : BaseSingleton<TurnManager>
     private void InitPlayerIdAndEntries()
     {
         // Master client is P1, others are P2
-        _myPlayerId = PhotonNetwork.IsMasterClient ? "P1" : "P2";
+        _myPlayerId = GameManager.Instance.CurrentPlayerID;
 
         PlayerEntry("P1");
         PlayerEntry("P2");
@@ -233,6 +233,11 @@ public class TurnManager : BaseSingleton<TurnManager>
     public void PauseGame(bool pause)
     {
         _timerRunning = !pause;
-        _timeLeft = 0;
+    }
+    public static void ResetPlayedCards()
+    {
+        PlayerPlayedCards.Clear();
+        PlayerPlayedCards["P1"] = new List<CardData>();
+        PlayerPlayedCards["P2"] = new List<CardData>();
     }
 }
