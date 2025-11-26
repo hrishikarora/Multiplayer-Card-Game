@@ -12,7 +12,7 @@ public class GameflowManager : BaseSingleton<GameflowManager>
 
     private int _currentTurn;
     private int _playersEnded;
-
+    public int CurrentTurn=>_currentTurn;
     private void OnEnable()
     {
         EventManager.AddListener<EventActionData.GameStart>(OnGameStart);

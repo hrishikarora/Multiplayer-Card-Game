@@ -10,18 +10,21 @@ public class GameManager : BaseSingleton<GameManager>
 {
     public string CurrentPlayerID => PhotonNetwork.IsMasterClient ? GameConstants.P1 : GameConstants.P2;
     private readonly Dictionary<string, int> playerScore = new Dictionary<string, int>();
+
+    private GameSnapshot _gameSnapshot = new GameSnapshot();
     public Dictionary<string, int> PlayerScore => playerScore;
     private void OnEnable()
     {
         playerScore[GameConstants.P1] = 0;
         playerScore[GameConstants.P2] = 0;
         EventManager.AddListener<EventActionData.RevealCards>(OnCardsReveal);
+        _gameSnapshot = new GameSnapshot();
     }
 
     private void OnDisable()
     {
         EventManager.RemoveListener<EventActionData.RevealCards>(OnCardsReveal);
-
+        EventManager.ClearAll();
     }
 
     private void Start()
@@ -92,13 +95,26 @@ public class GameManager : BaseSingleton<GameManager>
         if (PhotonNetwork.IsMasterClient && PhotonNetwork.InRoom)
         {
             var props = new ExitGames.Client.Photon.Hashtable
-        {
-            { "p1Score", playerScore.TryGetValue(GameConstants.P1, out var p1) ? p1 : 0 },
-            { "p2Score", playerScore.TryGetValue(GameConstants.P2, out var p2) ? p2 : 0 }
-        };
+            {
+                { "p1Score", playerScore.TryGetValue(GameConstants.P1, out var p1) ? p1 : 0 },
+                { "p2Score", playerScore.TryGetValue(GameConstants.P2, out var p2) ? p2 : 0 }
+            };
             PhotonNetwork.CurrentRoom.SetCustomProperties(props);
+
+            TakeSnapshot();
         }
     }
-   
 
+    private void TakeSnapshot()
+    {
+        int currentTurn = GameflowManager.Instance.CurrentTurn;
+        playerScore.TryGetValue(GameConstants.P1, out var p1Score);
+        playerScore.TryGetValue(GameConstants.P2, out var p2Score);
+
+
+        List<int> playerOneHandCards = HandManager.Instance.playerHandCards[GameConstants.P1];
+        List<int> playerTwoHandCards = HandManager.Instance.playerHandCards[GameConstants.P2];
+        List<int> playerOnePlacedCards = HandManager.Instance.placedCards[GameConstants.P1];
+        List<int> playerTwoPlaceCards = HandManager.Instance.placedCards[GameConstants.P2];
+    }
 }

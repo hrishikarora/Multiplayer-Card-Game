@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 [System.Serializable]
 public class TurnStartMessage
 {
@@ -43,4 +45,12 @@ public class RequestCardMessage
 {
     public string action;
     public string playerId;
+}
+
+[System.Serializable]
+public class PlayerCardModified
+{
+    public string action;
+    public string playerId;
+    public List<int> handCardIDs;
 }

@@ -87,6 +87,14 @@ public class PhotonEventListener : MonoBehaviour, IOnEventCallback
                     p2Score = endGame.p2Score
                 });
                 break;
+            case GameConstants.PLAYER_CARDS_MODIFIELD:
+                var playerCards = JsonUtility.FromJson<PlayerCardModified>(json);
+                EventManager.Trigger(new EventActionData.GetPlayerCards()
+                {
+                    playerId = playerCards.playerId,
+                    cardIds = playerCards.handCardIDs
+                });
+                break;
             default:
                 Debug.LogWarning($"[PhotonEventListener] Unknown action: {wrapper.action}");
                 break;

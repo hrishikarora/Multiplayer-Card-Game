@@ -1,8 +1,11 @@
+using ExitGames.Client.Photon;
 using Photon.Pun;
+using Photon.Realtime;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.XR;
 using static EventActionData;
 
 public class HandManager : BaseSingleton<HandManager>
@@ -15,29 +18,67 @@ public class HandManager : BaseSingleton<HandManager>
 
     private List<GameObject> currentCards = new List<GameObject>();
     private List<GameObject> _opponentCards = new List<GameObject>();
+
+    private List<int> _oppoenentHandCards = new List<int>();
+
     private List<GameObject> _placedCardList = new List<GameObject>();
+
+
+    public Dictionary<string,List<int>> playerHandCards = new Dictionary<string, List<int>>();
+    public Dictionary<string, List<int>> placedCards = new Dictionary<string, List<int>>();
+
 
     private void OnEnable()
     {
         EventManager.AddListener<EventActionData.GameStart>(OnGameStart);
         EventManager.AddListener<EventActionData.TurnStart>(OnTurnStart);
         EventManager.AddListener<EventActionData.RevealCards>(OnRevealCards);
-
+        EventManager.AddListener<EventActionData.GetPlayerCards>(AddPlayerCards);
+        playerHandCards.Clear();
+        playerHandCards.Add(GameConstants.P1, new List<int>());
+        playerHandCards.Add(GameConstants.P2, new List<int>());
+        placedCards.Clear();
+        placedCards.Add(GameConstants.P1, new List<int>());
+        placedCards.Add(GameConstants.P2, new List<int>());
     }
 
     private void OnDisable()
     {
         EventManager.RemoveListener<EventActionData.GameStart>(OnGameStart);
-        EventManager.AddListener<EventActionData.TurnStart>(OnTurnStart);
-        EventManager.AddListener<EventActionData.RevealCards>(OnRevealCards);
+        EventManager.RemoveListener<EventActionData.TurnStart>(OnTurnStart);
+        EventManager.RemoveListener<EventActionData.RevealCards>(OnRevealCards);
+        EventManager.RemoveListener<EventActionData.GetPlayerCards>(AddPlayerCards);
 
     }
 
+    private void AddPlayerCards(GetPlayerCards cards)
+    {
+        if(cards.playerId==GameManager.Instance.CurrentPlayerID)
+        {
+            return;
+        }
+
+        playerHandCards[cards.playerId].AddRange(cards.cardIds);
+    }
 
     private void OnGameStart(EventActionData.GameStart e)
     {
         var hand = CardManager.Instance.DealStartingHand();
         DisplayHand(hand);
+           
+        List<int> cardIds = hand.Select(x=>x.id).ToList();
+        playerHandCards[GameManager.Instance.CurrentPlayerID].AddRange(cardIds);
+        var msg = new PlayerCardModified
+        {
+            action = GameConstants.PLAYER_CARDS_MODIFIELD,
+            playerId = GameManager.Instance.CurrentPlayerID,
+            handCardIDs = cardIds
+        };
+
+        string json = JsonUtility.ToJson(msg);
+        var options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+
+        PhotonNetwork.RaiseEvent(GameConstants.GAME_EVENT_CODE, json, options, SendOptions.SendReliable);
     }
 
     private void DisplayHand(List<CardData> cards)
@@ -55,6 +96,18 @@ public class HandManager : BaseSingleton<HandManager>
         {
             var newCard = CardManager.Instance.DrawCard();
             AddCardToHand(newCard);
+
+            List<int> cardIds = new List<int>(newCard.id);
+            playerHandCards[GameManager.Instance.CurrentPlayerID].AddRange(cardIds);
+            var msg = new PlayerCardModified
+            {
+                action = GameConstants.PLAYER_CARDS_MODIFIELD,
+                playerId = GameManager.Instance.CurrentPlayerID,
+                handCardIDs = cardIds
+            };
+
+            string json = JsonUtility.ToJson(msg);
+            var options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
         }
     }
 
@@ -78,6 +131,11 @@ public class HandManager : BaseSingleton<HandManager>
         currentCards.Clear();
     }
 
+    public void RemoveCard(GameObject card)
+    {
+        currentCards.Remove(card);
+    }
+
     private void OnRevealCards(RevealCards cards)
     {   
         if(cards.playerId==GameManager.Instance.CurrentPlayerID)
@@ -94,6 +152,8 @@ public class HandManager : BaseSingleton<HandManager>
                 Debug.LogError($"[Reveal Cards] card not found");
                 continue;
             }
+            placedCards[cards.playerId].Add(card);
+
             GameObject cardGO = Instantiate(_opponendCardPrefab, _opponentCardParent);
             _opponentCards.Add(cardGO);
 
@@ -114,11 +174,22 @@ public class HandManager : BaseSingleton<HandManager>
         {
             GameObject cardGO = Instantiate(_opponendCardPrefab, _placedCardParent);
             _placedCardList.Add(cardGO);
-
+            placedCards[GameManager.Instance.CurrentPlayerID].Add(card.CardData.id);
             CardUI cardUI = cardGO.GetComponent<CardUI>();
             cardUI.Initialize(card.CardData, false);
         }
 
         UIManager.Instance.SetPlacedCardUI();
+    }
+
+    public List<int> GetCardIds(List<GameObject> cards)
+    {
+        List<int> cardIds = new List<int>();
+
+        foreach (var card in cards)
+        {
+            cardIds.Add(card.GetComponent<CardUI>().CardData.id);
+        }
+        return cardIds;
     }
 }

@@ -21,6 +21,7 @@ public static class GameConstants
     public const string REQ_CARD_ACTION_NAME = "requestCard";
     public const string REVEAL_CARDS_ACTION_NAME = "revealCards";
     public const string END_GAME_ACTION_NAME = "endGame";
+    public const string PLAYER_CARDS_MODIFIELD = "playerCards";
 
 
     #endregion

@@ -29,7 +29,6 @@ public class TurnManager : BaseSingleton<TurnManager>
     private string _myPlayerId;
 
     public bool HasEndedTurn => _hasEndedTurn;
-
     public bool AnyCardPlaced => _selectedCards.Count > 0;
 
     #region Unity Lifecycle
@@ -182,6 +181,7 @@ public class TurnManager : BaseSingleton<TurnManager>
 
         foreach (var card in _tempSelectedCards)
         {
+            HandManager.Instance.RemoveCard(card.gameObject);
             Destroy(card.gameObject);
         }
 

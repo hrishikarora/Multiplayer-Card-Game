@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 public static class EventActionData
 {
@@ -35,6 +36,12 @@ public static class EventActionData
         public string winner;
         public int p1Score;
         public int p2Score;
+    }
+
+    public class GetPlayerCards : GameEvent
+    {
+        public string playerId;
+        public List<int> cardIds;
     }
 
     public class SendRevealCards : GameEvent
