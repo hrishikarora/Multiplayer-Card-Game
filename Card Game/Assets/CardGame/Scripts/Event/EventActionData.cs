@@ -48,4 +48,15 @@ public static class EventActionData
     {
         public string PlayerId;
     }
+
+    public class OnPlayerDisconnected : GameEvent
+    {
+
+    }
+
+
+    public class OnPlayerReconnected : GameEvent
+    {
+
+    }
 }

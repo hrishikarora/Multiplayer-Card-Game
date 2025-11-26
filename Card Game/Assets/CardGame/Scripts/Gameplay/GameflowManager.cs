@@ -2,6 +2,8 @@
 using Photon.Pun;
 using Photon.Pun.Demo.PunBasics;
 using Photon.Realtime;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -13,11 +15,19 @@ public class GameflowManager : BaseSingleton<GameflowManager>
     private int _currentTurn;
     private int _playersEnded;
     public int CurrentTurn=>_currentTurn;
+
+    private Coroutine disconnectTimerRoutine;
+    private const int DisconnectTimeout = 15;
+
+    public bool IsGameEnd = false;
     private void OnEnable()
     {
         EventManager.AddListener<EventActionData.GameStart>(OnGameStart);
         EventManager.AddListener<EventActionData.PlayerEndedTurn>(OnPlayerEndedTurn);
         EventManager.AddListener<EventActionData.SendRevealCards>(RevealCards);
+        EventManager.AddListener<EventActionData.OnPlayerDisconnected>(PlayerDisconnected);
+        EventManager.AddListener<EventActionData.OnPlayerReconnected>(OnPlayerReconnected);
+        IsGameEnd = false;
 
     }
 
@@ -26,8 +36,10 @@ public class GameflowManager : BaseSingleton<GameflowManager>
         EventManager.RemoveListener<EventActionData.GameStart>(OnGameStart);
         EventManager.RemoveListener<EventActionData.PlayerEndedTurn>(OnPlayerEndedTurn);
         EventManager.RemoveListener<EventActionData.SendRevealCards>(RevealCards);
-
+        EventManager.RemoveListener<EventActionData.OnPlayerDisconnected>(PlayerDisconnected);
+        EventManager.RemoveListener<EventActionData.OnPlayerReconnected>(OnPlayerReconnected);
     }
+
 
     private void OnGameStart(EventActionData.GameStart gameStart)
     {
@@ -130,6 +142,7 @@ public class GameflowManager : BaseSingleton<GameflowManager>
 
     private void EndGame()
     {
+        IsGameEnd = true;
         int p1Score = GameManager.Instance.PlayerScore[GameConstants.P1];
         int p2Score = GameManager.Instance.PlayerScore[GameConstants.P2];
         string winner = p1Score > p2Score ? GameConstants.P1 : GameConstants.P2;
@@ -147,5 +160,61 @@ public class GameflowManager : BaseSingleton<GameflowManager>
         PhotonNetwork.RaiseEvent(GameConstants.GAME_EVENT_CODE, json, options, SendOptions.SendReliable);
 
         Debug.Log("[GameFlowController] Game ended.");
+    }
+
+
+    private void PlayerDisconnected(OnPlayerDisconnected disconnected)
+    {
+        Debug.Log("[GameFlow] Player disconnected. Starting timeout...");
+
+        TurnManager.Instance.PauseGame(true);
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            if (disconnectTimerRoutine != null)
+                StopCoroutine(disconnectTimerRoutine);
+
+            disconnectTimerRoutine = StartCoroutine(DisconnectTimeoutRoutine());
+        }
+    }
+
+
+    private void OnPlayerReconnected(OnPlayerReconnected onPlayerReconnected)
+    {
+        if (disconnectTimerRoutine != null)
+        {
+            StopCoroutine(disconnectTimerRoutine);
+            disconnectTimerRoutine = null;
+        }
+        _currentTurn--;
+        TurnManager.Instance.PauseGame(false);
+        NextTurn();
+    }
+
+    private IEnumerator DisconnectTimeoutRoutine()
+    {
+        int timeLeft = DisconnectTimeout;
+
+        while (timeLeft > 0)
+        {
+
+            yield return new WaitForSeconds(1f);
+
+            timeLeft--;
+        }
+        IsGameEnd = true;
+        Debug.Log("[GameFlow] Timeout reached. Ending game...");
+        var msg = new GameEndMessage
+        {
+            action = GameConstants.END_GAME_ACTION_NAME,
+            winner = GameManager.Instance.CurrentPlayerID,
+            p1Score = GameManager.Instance.PlayerScore[GameConstants.P1],
+            p2Score = GameManager.Instance.PlayerScore[GameConstants.P2]
+        };
+
+        var json = JsonUtility.ToJson(msg);
+        var options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+
+        PhotonNetwork.RaiseEvent(GameConstants.GAME_EVENT_CODE, json, options, SendOptions.SendReliable);
     }
 }

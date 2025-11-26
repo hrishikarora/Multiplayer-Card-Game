@@ -8,6 +8,8 @@ using static EventActionData;
 public class UIManager : BaseSingleton<UIManager>
 {
     [SerializeField] private GameObject _endGameScreen;
+    [SerializeField] private GameObject _pauseScreen;
+
     [SerializeField] private TextMeshProUGUI _currentTurnText;
     [SerializeField] private TextMeshProUGUI _currentPlayerScore;
     [SerializeField] private TextMeshProUGUI _opponentScore;
@@ -20,6 +22,9 @@ public class UIManager : BaseSingleton<UIManager>
     private void OnEnable()
     {
         EventManager.AddListener<EventActionData.TurnStart>(StartTurn);
+        EventManager.AddListener<EventActionData.OnPlayerDisconnected>(PlayerDisconnected);
+        EventManager.AddListener<EventActionData.TurnStart>(PlayerDisconnected);
+
         string currentPlayerID = GameManager.Instance.CurrentPlayerID == GameConstants.P1 ? "Player 1" : "Player 2";
         string opponentPlayerID = GameManager.Instance.CurrentPlayerID == GameConstants.P1 ? "Player 2" : "Player 1";
         _currentPlayerID.SetText(currentPlayerID);
@@ -30,7 +35,8 @@ public class UIManager : BaseSingleton<UIManager>
     private void OnDisable()
     {
         EventManager.RemoveListener<EventActionData.TurnStart>(StartTurn);
-
+        EventManager.RemoveListener<EventActionData.OnPlayerDisconnected>(PlayerDisconnected);
+        EventManager.RemoveListener<EventActionData.TurnStart>(PlayerDisconnected);
     }
 
     public void SetScore(string playerID, int score)
@@ -74,5 +80,16 @@ public class UIManager : BaseSingleton<UIManager>
     public void OpenEndGameScreen()
     {
         _endGameScreen.SetActive(true);
+    }
+
+    private void PlayerDisconnected(OnPlayerDisconnected reconnected)
+    {
+        _pauseScreen.SetActive(true);
+    }
+
+    private void PlayerDisconnected(TurnStart disconnected)
+    {
+        _pauseScreen.SetActive(false);
+
     }
 }

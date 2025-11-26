@@ -13,12 +13,15 @@ public class GameManager : BaseSingleton<GameManager>
 
     private GameSnapshot _gameSnapshot = new GameSnapshot();
     public Dictionary<string, int> PlayerScore => playerScore;
+
+    public string RoomName = "";
     private void OnEnable()
     {
         playerScore[GameConstants.P1] = 0;
         playerScore[GameConstants.P2] = 0;
         EventManager.AddListener<EventActionData.RevealCards>(OnCardsReveal);
         _gameSnapshot = new GameSnapshot();
+        RoomName = PhotonNetwork.CurrentRoom?.Name;
     }
 
     private void OnDisable()

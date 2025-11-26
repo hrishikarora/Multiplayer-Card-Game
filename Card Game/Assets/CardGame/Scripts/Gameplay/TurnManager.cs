@@ -229,4 +229,10 @@ public class TurnManager : BaseSingleton<TurnManager>
     }
 
     #endregion
+
+    public void PauseGame(bool pause)
+    {
+        _timerRunning = !pause;
+        _timeLeft = 0;
+    }
 }

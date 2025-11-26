@@ -9,7 +9,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] string _roomName = "CardGame";
 
-
+        
     public override void OnEnable()
     {
         base.OnEnable();
@@ -45,11 +45,19 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
     public void JoinOrCreateRoom(EventActionData.CreateJoinRoom createJoinRoom)
     {
+
+        RoomOptions roomOptions = new RoomOptions
+        {
+            MaxPlayers =GameConstants.MAX_PLAYERS,
+            PlayerTtl = 60000,
+            CleanupCacheOnLeave = false
+        };
         PhotonNetwork.JoinOrCreateRoom(
               _roomName,
-              new RoomOptions { MaxPlayers = maxPlayers },
+             roomOptions,
               TypedLobby.Default
           );
+
     }
 
     public override void OnJoinedRoom()
