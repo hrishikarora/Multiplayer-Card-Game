@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ReconnectionHandler : MonoBehaviourPunCallbacks
 {
-    private int reconnectAttempts = 5;
+    private int reconnectAttempts = 7;
     private int currentAttempt = 0;
     private bool isReconnecting = false;
     private bool isConnected = true;

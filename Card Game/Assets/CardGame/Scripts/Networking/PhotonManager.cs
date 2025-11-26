@@ -56,7 +56,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         RoomOptions roomOptions = new RoomOptions
         {
             MaxPlayers = GameConstants.MAX_PLAYERS,
-            PlayerTtl = 80000,
+            PlayerTtl = 21000,
             CleanupCacheOnLeave = false
         };
 
